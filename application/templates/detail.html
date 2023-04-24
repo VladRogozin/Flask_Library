@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Flask Library - {{ title }}{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center mb-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='images/' + book.image_filename) }}" class="img-fluid rounded" alt="{{ book.title }}">
+                        </div>
+                        <div class="col-md-8">
+                            <h2 class="card-title mb-4">{{ book.title }}</h2>
+                            <h5 class="card-subtitle mb-3 text-muted">{{ book.date_writing.strftime('%Y') }}</h5>
+                            <p class="card-text"><strong>Author:</strong> {{ book.author }}</p>
+                            <p class="card-text mt-4">{{ book.description }}</p>
+                        </div>
+                        <br>
+                    {% if current_user.is_authenticated %}
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('update', pk=book.id) }}" class="btn btn-secondary">Update</a>
+                            <a href="{{ url_for('delete', pk=book.id) }}" class="btn btn-danger">Delete</a>
+                            <a href="{{ url_for('download', pk=book.id) }}" class="btn btn-success">Download file</a>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <br>
+                    {% if current_user.is_authenticated %}
+                    <div class="form-group col-sm-2" >
+                        <form method="POST" action="{{ url_for('rate_book') }}" class="form-inline">
+                            <select name="rating" id="rating" class="form-control">
+                                <option value="1">1 star</option>
+                                <option value="2">2 stars</option>
+                                <option value="3">3 stars</option>
+                                <option value="4">4 stars</option>
+                                <option value="5">5 stars</option>
+                            </select>
+                            <input type="hidden" name="book_id" value="{{ book.id }}">
+                            <button type="submit" class="btn btn-outline-success btn-sm">Rate</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

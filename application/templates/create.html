@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Flask Library - {{ title }}{% endblock %}
+{% block content %}
+
+<h1>{{ title }}</h1>
+<div class="text-center">
+    <form method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <br>
+        <div class="form-group">
+            {{ form.title.label(class="control-label") }}
+            {{ form.title(class="form-control") }}
+            {% for error in form.title.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.author.label(class="control-label") }}
+            {{ form.author(class="form-control") }}
+            {% for error in form.author.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="date_writing">Date writing</label>
+            <input type="date" class="form-control" id="date_writing" name="date_writing">
+        </div>
+        <br>
+            <div class="form-group">
+                {{ form.file.label(class="control-label") }}
+                {{ form.file(class="form-control-file") }}
+            </div>
+        <br>
+        <div class="form-group">
+            {{ form.image_file.label(class="control-label") }}
+            {{ form.image_file(class="form-control-file") }}
+            {% for error in form.image_file.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock %}

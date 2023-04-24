@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Flask Library - {{ title }}{% endblock %}
+{% block content %}
+
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            Are you want to remove book "{{ book.title }}"?
+        </p>
+        <p>
+            {{ form.submit() }}
+            <a href="{{ url_for('detail', pk=book.id) }}">Cancel</a>
+        </p>
+    </form>
+
+{% endblock %}
