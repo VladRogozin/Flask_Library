@@ -11,11 +11,11 @@
             {% endfor %}
         </div>
         <div class="form-group">
-            {{ form.text.label(class="form-label") }}
-            {{ form.text(class_="ckeditor form-control", id='text-field') }}
-            {% if form.text.errors %}
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(class_="ckeditor form-control", id='text-field') }}
+            {% if form.content.errors %}
             <ul class="invalid-feedback">
-                {% for error in form.text.errors %}
+                {% for error in form.content.errors %}
                 <li>{{ error }}</li>
                 {% endfor %}
             </ul>

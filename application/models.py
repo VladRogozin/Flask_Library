@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 
-from Flask_Library.application import db, manager
+from application import db, manager
 from datetime import datetime
 
 

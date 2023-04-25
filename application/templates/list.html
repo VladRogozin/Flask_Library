@@ -3,15 +3,6 @@
 {% block title %}Flask Library - {{ title }}{% endblock %}
 {% block content %}
 {% for book in books %}
-    <form method="GET" action="{{ url_for('read_books') }}" class="form-inline mb-3">
-      <label class="mr-2" for="sort">Sort by:</label>
-      <select name="sort" id="sort" class="form-control mr-2">
-        <option value="rating">Rating</option>
-        <option value="year">Year</option>
-      </select>
-      <button type="submit" class="btn btn-primary">Sort</button>
-    </form>
-    <br>
     <div class="container card text-center py-4" style="background-color: #8dbf8a">
       <div class="row align-items-center">
 

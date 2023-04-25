@@ -25,5 +25,5 @@ db = SQLAlchemy(app, metadata=metadata)
 migrate = Migrate(app, db, render_as_batch=True)
 manager = LoginManager(app)
 
-from Flask_Library.application import models
-from Flask_Library.application import views
+from application import models
+from application import views

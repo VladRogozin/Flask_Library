@@ -15,7 +15,7 @@
                 <tr>
                     <th>{{ book.title }}</th>
                     <th><a style="color: #2b7043" href="{{ url_for('edit_text', text_id=book.id) }}">About</a></th>
-                </tr>
+                    <th><a style="color: #2b7043" href="{{ url_for('download_text', text_id=book.id) }}">down</a></th>
             </div>
         {% endfor %}
     </table>

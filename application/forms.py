@@ -3,9 +3,9 @@ from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, DateTimeField, TextAreaField, DateField
 from wtforms import SubmitField
 from wtforms import FileField
-from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
+from wtforms.validators import DataRequired, ValidationError, EqualTo
 from wtforms.validators import Length
-from Flask_Library.application import app
+from application import app
 from wtforms.validators import Email
 
 
@@ -62,5 +62,5 @@ class RegistrationForm(FlaskForm):
 
 class TextForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=50)])
-    text = TextAreaField('Text', validators=[DataRequired()])
+    content = TextAreaField('content', validators=[DataRequired()])
     submit = SubmitField('Save')

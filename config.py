@@ -8,7 +8,7 @@ load_dotenv()
 
 
 def idea():
-    from Flask_Library.application import app
+    from application import app
     return app
 
 

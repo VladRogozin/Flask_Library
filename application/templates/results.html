@@ -2,30 +2,32 @@
 
 {% block title %}Flask Library - {{ title }}{% endblock %}
 {% block content %}
-    <div class="text-center">
-        <h1>You search: {{ search_term }}</h1>
+{% for book in books %}
+    <div class="container card text-center py-4" style="background-color: #8dbf8a">
+      <div class="row align-items-center">
+
+        <div class="col-md-4">
+          <img src="{{ url_for('static', filename='images/' + book.image_filename) }}" class="img-thumbnail" alt="{{ book.title }}">
+        </div>
+
+        <div class="col-md-6">
+          <h2 class="mb-3">{{ book.title }}</h2>
+          <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="lead text-justify">{{ book.description }}</p>
+                </div>
+            </div>
+          </div>
+          <h2 class="lead mb-4">{{ book.author }}</h2>
+
+          <a href="{{ url_for('detail', pk=book.id) }}" class="btn btn-lg btn-dark">Learn more</a>
+          <a class="btn btn-lg btn-warning">Rating 5/{{ book.get_average_rating() }}</a>
+          <p>{{book.date_writing.strftime('%Y')}}</p>
+        </div>
+      </div>
     </div>
     <br>
-    <table class="table table-success table-striped table-hover table-bordered rounded">
-        <thead>
-            <tr>
-                <th> </th>
-                <th> Book </th>
-                <th> Author </th>
-                <th> Detail </th>
-            </tr>
-        </thead>
-        {% for book in books %}
-            <div>
-                <tr>
-                    <th class="text-center" ><img src="{{ url_for('static', filename='images/' + book.image_filename) }}" height="220" width="150"></th>
-                    <th>{{ book.title }}</th>
-                    <th>{{ book.author }}</th>
-                    <th><a style="color: #2b7043" href="{{ url_for('detail', pk=book.id) }}">About</a></th>
-                </tr>
-            </div>
-        {% endfor %}
-    </table>
-
+{% endfor %}
 
 {% endblock %}

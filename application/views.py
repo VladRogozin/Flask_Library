@@ -1,20 +1,29 @@
 import os
 import uuid
 from datetime import datetime
-from flask import send_file
 
-from Flask_Library.application.models import Book, BookRating, Text
-from Flask_Library.application.forms import CreateBookForm, TextForm
-from Flask_Library.application.forms import DeleteBookForm
-from Flask_Library.application.forms import UpdateBookForm
-from Flask_Library.application import app
-from Flask_Library.application import models
+
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+from flask import send_file, make_response
+
+from application.models import Book, BookRating, Text
+from application.forms import CreateBookForm, TextForm
+from application.forms import DeleteBookForm
+from application.forms import UpdateBookForm
+from application import app
+
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from Flask_Library.application.models import User
-from Flask_Library.application.forms import LoginForm, RegistrationForm
-from Flask_Library.application import db
+from application.models import User
+from application.forms import LoginForm, RegistrationForm
+from application import db
 
 
 @app.route('/')
@@ -137,17 +146,50 @@ def editor():
     form = TextForm()
     user_id = current_user.id
     if form.validate_on_submit():
-        text = Text(content=form.text.data, title=form.title.data, user_id=user_id)
+        text = Text(content=form.content.data, title=form.title.data, user_id=user_id)
         db.session.add(text)
         db.session.commit()
         flash('Text saved!')
+        return redirect(url_for('my_write_books'))
     return render_template('editor.html', form=form)
 
 
-@app.route('/edit_text/<int:text_id>')
+@app.route('/edit_text/<int:text_id>', methods=['GET', 'POST'])
 def edit_text(text_id):
-    text = Text.query.filter_by(id=text_id).first()
-    return render_template('edit_text.html', text=text)
+    text = Text.query.get(text_id)
+    form = TextForm(obj=text)
+    if form.validate_on_submit():
+        form.populate_obj(text)
+        db.session.add(text)  # добавить измененный объект в сессию
+        db.session.commit()   # зафиксировать изменения в базе данных
+        return redirect(url_for('my_write_books', text_id=text.id))
+    form.content.data = text.content # установить значение поля text формы
+    return render_template('edit_text.html', form=form, text=text)
+
+
+@app.route('/download_text/<int:text_id>', methods=['GET'])
+def download_text(text_id):
+    text = Text.query.get(text_id)
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer)
+    styles = getSampleStyleSheet()
+    title = Paragraph(text.title, styles['Heading1'])
+    Story = [title]
+
+    content = text.content.replace("<p>", "").replace("</p>", "<br/>").replace("&nbsp;", " ")
+    paragraphs = content.split("<br/>")
+    for paragraph in paragraphs:
+        if paragraph.strip():
+            p = Paragraph(paragraph.strip(), styles['Normal'])
+            Story.append(p)
+            Story.append(Spacer(1, 12))
+
+    pdf.build(Story)
+    buffer.seek(0)
+
+    response = make_response(send_file(buffer, as_attachment=True, download_name='{}.pdf'.format(text.title)))
+    response.headers['Content-Disposition'] = 'attachment; filename="{}.pdf"'.format(text.title)
+    return response
 
 
 @app.route('/book/update/<int:pk>', methods=['GET', 'POST'])
